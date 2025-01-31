@@ -1,0 +1,72 @@
+version: '1.0'
+services:
+   eureka:
+     image: 'eureka:2.0'
+     restart: always
+     container_name: maveureka
+     ports:
+      - "8761:8761"
+     environment:
+      - SPRING_APPLICATION_NAME=eureka
+     networks:
+      - bookapplication
+
+   ratings:
+      image: 'ratings:2.0'
+      restart: always
+      container_name: mavrating
+      ports:
+        - "8082:8082"
+      environment:
+        - SPRING_APPLICATION_NAME=ratings
+        - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+      depends_on:
+        - eureka
+      networks:
+        - bookapplication
+
+   details:
+      image: 'details:2.0'
+      restart: always
+      container_name: mavdetail
+      ports:
+        - "8084:8084"
+      environment:
+        - SPRING_APPLICATION_NAME=details
+        - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+      depends_on:
+        - eureka
+      networks:
+        - bookapplication
+
+   reviews:
+       image: 'reviews:2.0'
+       restart: always
+       container_name: mavreview
+       ports:
+         - "8083:8083"
+       environment:
+         - SPRING_APPLICATION_NAME=reviews
+         - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+       depends_on:
+         - eureka
+       networks:
+         - bookapplication
+
+   productPage:
+       image: 'productpage:2.0'
+       restart: always
+       container_name: mavproduct
+       ports:
+         - "8080:8080"
+       environment:
+         - SPRING_APPLICATION_NAME=productPage
+         - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+       depends_on:
+         - eureka
+       networks:
+         - bookapplication
+
+networks:
+  bookapplication:
+   driver: bridge
